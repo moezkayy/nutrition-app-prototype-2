@@ -1,51 +1,33 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
-const MainScreen = ({ navigation }) => {
+const MainScreen = () => {
+  const navigation = useNavigation();
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Welcome to Your Nutrition App</Text>
-
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Your Daily Summary</Text>
-        <Text style={styles.infoText}>Calories Consumed: 1200 kcal</Text>
-        <Text style={styles.infoText}>Calories Burned: 500 kcal</Text>
-        <Text style={styles.infoText}>Remaining: 700 kcal</Text>
-      </View>
+      <Text style={styles.title}>Main Screen</Text>
 
       <TouchableOpacity
         style={styles.card}
-        onPress={() => navigation.navigate('LogFood')}
-      >
-        <Text style={styles.cardText}>Log Food</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.card}
-        onPress={() => navigation.navigate('ProfileInfo')}
+        onPress={() => navigation.navigate('Profile Info')}
       >
         <Text style={styles.cardText}>Profile Information</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.card}
-        onPress={() => navigation.navigate('ActivityTracking')}
+        onPress={() => navigation.navigate('Track Activity')}
       >
         <Text style={styles.cardText}>Track Activity</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.card}
-        onPress={() => navigation.navigate('NutritionTips')}
+        onPress={() => navigation.navigate('Nutrition Tips')}
       >
         <Text style={styles.cardText}>Nutrition Tips</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.card}
-        onPress={() => navigation.navigate('ProgressOverview')}
-      >
-        <Text style={styles.cardText}>Progress Overview</Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -62,32 +44,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 20,
   },
-  section: {
-    marginBottom: 20,
-    padding: 15,
-    backgroundColor: '#f9f9f9',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#ddd',
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  infoText: {
-    fontSize: 16,
-    marginBottom: 5,
-  },
   card: {
-    backgroundColor: '#007BFF',
-    padding: 15,
-    borderRadius: 8,
-    marginBottom: 15,
+    backgroundColor: '#f8f8f8',
+    padding: 20,
+    borderRadius: 10,
+    marginBottom: 20,
     alignItems: 'center',
   },
   cardText: {
-    color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
   },
