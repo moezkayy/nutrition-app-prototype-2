@@ -9,6 +9,7 @@ import LogFoodScreen from './screens/LogFoodScreen';
 import ProfileInfoScreen from './screens/ProfileInfoScreen';
 import TrackActivityScreen from './screens/TrackActivityScreen';
 import NutritionTipsScreen from './screens/NutritionTipsScreen';
+import ProgressReportScreen from './screens/ProgressReportScreen';
 
 const Stack = createStackNavigator();
 
@@ -24,6 +25,7 @@ export default function App() {
           <Stack.Screen name="Profile Info" component={ProfileInfoScreen} />
           <Stack.Screen name="Track Activity" component={TrackActivityScreen} />
           <Stack.Screen name="Nutrition Tips" component={NutritionTipsScreen} />
+          <Stack.Screen name="Progress Report" component={ProgressReportScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </ProfileProvider>

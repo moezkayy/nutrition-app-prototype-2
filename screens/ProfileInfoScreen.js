@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import { ProfileContext } from '../context/ProfileContext';
 
 const ProfileInfoScreen = () => {
@@ -8,21 +9,22 @@ const ProfileInfoScreen = () => {
   const [height, setHeight] = useState(profile.height);
   const [dietaryPreference, setDietaryPreference] = useState(profile.dietaryPreference);
   const [activityLevel, setActivityLevel] = useState(profile.activityLevel);
-  const [targetGoal, setTargetGoal] = useState(profile.targetGoal);
-
-  const calculateBMI = () => {
-    const heightInMeters = parseFloat(height) / 100;
-    const bmi = parseFloat(weight) / (heightInMeters * heightInMeters);
-    return bmi ? bmi.toFixed(1) : '---';
-  };
+  const [goalType, setGoalType] = useState(profile.goalType || 'Weight Loss');
+  const [goalAmount, setGoalAmount] = useState(profile.goalAmount || '');
 
   const saveProfile = () => {
+    if (!weight || !height || !dietaryPreference || !activityLevel || !goalAmount) {
+      Alert.alert('Error', 'Please fill in all required fields.');
+      return;
+    }
+
     setProfile({
       weight,
       height,
       dietaryPreference,
       activityLevel,
-      targetGoal,
+      goalType,
+      goalAmount,
     });
   };
 
@@ -69,11 +71,25 @@ const ProfileInfoScreen = () => {
       </View>
 
       <View style={styles.inputGroup}>
-        <Text style={styles.label}>Target Goal</Text>
+        <Text style={styles.label}>Goal Type</Text>
+        <Picker
+          selectedValue={goalType}
+          style={styles.picker}
+          onValueChange={(itemValue) => setGoalType(itemValue)}
+        >
+          <Picker.Item label="Weight Loss" value="Weight Loss" />
+          <Picker.Item label="Weight Gain" value="Weight Gain" />
+          <Picker.Item label="Maintain Weight" value="Maintain Weight" />
+        </Picker>
+      </View>
+
+      <View style={styles.inputGroup}>
+        <Text style={styles.label}>Goal Amount (kg)</Text>
         <TextInput
           style={styles.input}
-          value={targetGoal}
-          onChangeText={setTargetGoal}
+          keyboardType="numeric"
+          value={goalAmount}
+          onChangeText={setGoalAmount}
         />
       </View>
 
@@ -88,11 +104,13 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     padding: 20,
+    backgroundColor: '#fff',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+    textAlign: 'center',
   },
   inputGroup: {
     marginBottom: 15,
@@ -102,6 +120,13 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+    fontSize: 16,
+  },
+  picker: {
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
