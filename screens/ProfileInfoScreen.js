@@ -1,17 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { ProfileContext } from '../context/ProfileContext';
 
 const ProfileInfoScreen = () => {
-  const [weight, setWeight] = useState('');
-  const [height, setHeight] = useState('');
-  const [dietaryPreference, setDietaryPreference] = useState('');
-  const [activityLevel, setActivityLevel] = useState('');
-  const [targetGoal, setTargetGoal] = useState('');
+  const { profile, setProfile } = useContext(ProfileContext);
+  const [weight, setWeight] = useState(profile.weight);
+  const [height, setHeight] = useState(profile.height);
+  const [dietaryPreference, setDietaryPreference] = useState(profile.dietaryPreference);
+  const [activityLevel, setActivityLevel] = useState(profile.activityLevel);
+  const [targetGoal, setTargetGoal] = useState(profile.targetGoal);
 
   const calculateBMI = () => {
     const heightInMeters = parseFloat(height) / 100;
     const bmi = parseFloat(weight) / (heightInMeters * heightInMeters);
     return bmi ? bmi.toFixed(1) : '---';
+  };
+
+  const saveProfile = () => {
+    setProfile({
+      weight,
+      height,
+      dietaryPreference,
+      activityLevel,
+      targetGoal,
+    });
   };
 
   return (
@@ -44,7 +56,6 @@ const ProfileInfoScreen = () => {
           style={styles.input}
           value={dietaryPreference}
           onChangeText={setDietaryPreference}
-          placeholder="E.g., Vegetarian, Keto"
         />
       </View>
 
@@ -54,7 +65,6 @@ const ProfileInfoScreen = () => {
           style={styles.input}
           value={activityLevel}
           onChangeText={setActivityLevel}
-          placeholder="E.g., Sedentary, Active"
         />
       </View>
 
@@ -64,17 +74,11 @@ const ProfileInfoScreen = () => {
           style={styles.input}
           value={targetGoal}
           onChangeText={setTargetGoal}
-          placeholder="E.g., Weight Loss, Maintenance"
         />
       </View>
 
-      <View style={styles.bmiContainer}>
-        <Text style={styles.bmiLabel}>Your BMI:</Text>
-        <Text style={styles.bmiValue}>{calculateBMI()}</Text>
-      </View>
-
-      <TouchableOpacity style={styles.saveButton}>
-        <Text style={styles.saveButtonText}>Save Changes</Text>
+      <TouchableOpacity style={styles.button} onPress={saveProfile}>
+        <Text style={styles.buttonText}>Save Profile</Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -82,8 +86,8 @@ const ProfileInfoScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
+    flexGrow: 1,
     padding: 20,
-    backgroundColor: '#fff',
   },
   title: {
     fontSize: 24,
@@ -104,27 +108,15 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 16,
   },
-  bmiContainer: {
-    alignItems: 'center',
-    marginVertical: 20,
-  },
-  bmiLabel: {
-    fontSize: 18,
-  },
-  bmiValue: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#007BFF',
-  },
-  saveButton: {
+  button: {
     backgroundColor: '#007BFF',
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',
   },
-  saveButtonText: {
+  buttonText: {
     color: '#fff',
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
   },
 });
