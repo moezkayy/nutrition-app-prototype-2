@@ -1,0 +1,11 @@
+mealName,foodItems,portionSize,calories,carbs,proteins,fats,preparationMethod,ingredients,mealLocation,notes
+Biryani,Chicken Biryani,1 plate,500,70,25,20,Fried,Rice, Chicken, Spices,Home,
+Chapati,Chapati,1 piece,150,30,5,2,Grilled,Wheat Flour,Home,
+Mango,Mango,1 fruit,200,50,2,1,Raw,Mango,Home,
+Apple,Apple,1 fruit,95,25,0.5,0.3,Raw,Apple,Home,
+Daal,Yellow Lentils,1 bowl,300,40,15,10,Boiled,Lentils, Spices,Home,
+Chicken Karahi,Chicken Karahi,1 plate,400,10,30,25,Fried,Chicken, Spices,Home,
+Roti,Roti,1 piece,120,25,3,1,Grilled,Wheat Flour,Home,
+Banana,Banana,1 fruit,105,27,1,0.3,Raw,Banana,Home,
+Chana Chaat,Chickpea Salad,1 bowl,250,35,10,5,Boiled,Chickpeas, Spices,Home,
+Kheer,Rice Pudding,1 bowl,350,50,8,10,Boiled,Rice, Milk, Sugar,Home,

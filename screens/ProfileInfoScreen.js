@@ -7,8 +7,8 @@ const ProfileInfoScreen = () => {
   const { profile, setProfile } = useContext(ProfileContext);
   const [weight, setWeight] = useState(profile.weight);
   const [height, setHeight] = useState(profile.height);
-  const [dietaryPreference, setDietaryPreference] = useState(profile.dietaryPreference);
-  const [activityLevel, setActivityLevel] = useState(profile.activityLevel);
+  const [dietaryPreference, setDietaryPreference] = useState(profile.dietaryPreference || 'None');
+  const [activityLevel, setActivityLevel] = useState(profile.activityLevel || 'Sedentary');
   const [goalType, setGoalType] = useState(profile.goalType || 'Weight Loss');
   const [goalAmount, setGoalAmount] = useState(profile.goalAmount || '');
 
@@ -54,20 +54,32 @@ const ProfileInfoScreen = () => {
 
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Dietary Preference</Text>
-        <TextInput
-          style={styles.input}
-          value={dietaryPreference}
-          onChangeText={setDietaryPreference}
-        />
+        <Picker
+          selectedValue={dietaryPreference}
+          style={styles.picker}
+          onValueChange={(itemValue) => setDietaryPreference(itemValue)}
+        >
+          <Picker.Item label="None" value="None" />
+          <Picker.Item label="Vegetarian" value="Vegetarian" />
+          <Picker.Item label="Vegan" value="Vegan" />
+          <Picker.Item label="Keto" value="Keto" />
+          <Picker.Item label="Paleo" value="Paleo" />
+        </Picker>
       </View>
 
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Activity Level</Text>
-        <TextInput
-          style={styles.input}
-          value={activityLevel}
-          onChangeText={setActivityLevel}
-        />
+        <Picker
+          selectedValue={activityLevel}
+          style={styles.picker}
+          onValueChange={(itemValue) => setActivityLevel(itemValue)}
+        >
+          <Picker.Item label="Sedentary" value="Sedentary" />
+          <Picker.Item label="Lightly Active" value="Lightly Active" />
+          <Picker.Item label="Moderately Active" value="Moderately Active" />
+          <Picker.Item label="Very Active" value="Very Active" />
+          <Picker.Item label="Super Active" value="Super Active" />
+        </Picker>
       </View>
 
       <View style={styles.inputGroup}>
