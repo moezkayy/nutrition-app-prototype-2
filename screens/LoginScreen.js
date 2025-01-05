@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const initialUsers = [
+  { email: 'user1@example.com', password: 'password1' },
+  { email: 'user2@example.com', password: 'password2' },
+];
+
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -19,29 +24,14 @@ export default function LoginScreen({ navigation }) {
       return;
     }
 
-    try {
-      const response = await fetch('https://auth-backend-production-e38e.up.railway.app/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
+    const user = initialUsers.find(user => user.email === email && user.password === password);
 
-      const result = await response.json();
-
-      if (response.ok) {
-        // Save token and navigate
-        await AsyncStorage.setItem('userToken', result.token);
-        navigation.navigate('Main');
-      } else if (response.status === 401) {
-        setErrorMessage({ general: 'Invalid email or password.' });
-      } else {
-        setErrorMessage({ general: result.message || 'Username or Password is Incorrect' });
-      }
-    } catch (error) {
-      console.error('Login Error:', error);
-      setErrorMessage({ general: 'Unable to connect to the server. Please try again later.' });
+    if (user) {
+      // Save token and navigate
+      await AsyncStorage.setItem('userToken', 'dummy-token');
+      navigation.navigate('Main');
+    } else {
+      setErrorMessage({ general: 'Invalid email or password.' });
     }
   };
 
@@ -162,4 +152,4 @@ const styles = StyleSheet.create({
     color: '#007BFF',
     fontSize: 14,
   },
-});
+})

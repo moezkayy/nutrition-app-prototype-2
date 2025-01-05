@@ -1,5 +1,14 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, ScrollView, TouchableOpacity, Alert, FlatList } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Alert,
+  FlatList,
+} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { ProfileContext } from '../context/ProfileContext';
 import * as FileSystem from 'expo-file-system';
@@ -44,18 +53,6 @@ function LogFoodScreen({ navigation }) {
     }
   };
 
-  const saveFoodToCSV = async (food) => {
-    try {
-      const fileContent = await FileSystem.readAsStringAsync(csvFilePath);
-      const parsedData = CSV.parse(fileContent, { header: true });
-      parsedData.push(food);
-      const csvData = CSV.stringify(parsedData, { header: true });
-      await FileSystem.writeAsStringAsync(csvFilePath, csvData);
-    } catch (error) {
-      console.log('Error saving food to CSV:', error);
-    }
-  };
-
   const validateFields = () => {
     if (!mealName || !foodItems || !portionSize || !calories || !carbs || !proteins || !fats) {
       Alert.alert('Error', 'Please fill in all required fields.');
@@ -84,59 +81,42 @@ function LogFoodScreen({ navigation }) {
     };
 
     setFoodLogs([...foodLogs, newLog]);
-    saveFoodToCSV(newLog);
     Alert.alert('Success', 'Food successfully logged.');
     setShowNewFoodForm(false);
     setShowLogOptions(false);
   };
 
-  const logExistingFood = (food) => {
-    const newLog = {
-      ...food,
-      date: date.toLocaleDateString(),
-      time: date.toLocaleTimeString(),
-    };
-
-    setFoodLogs([...foodLogs, newLog]);
-    Alert.alert('Success', 'Food successfully logged.');
-    setShowExistingFoodList(false);
-    setShowLogOptions(false);
-  };
-
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Log Food</Text>
+      <Text style={styles.title}>Log Your Meals</Text>
 
       <FlatList
         data={foodLogs}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
           <View style={styles.logItem}>
-            <Text style={styles.logText}>{item.date} {item.time} - {item.mealName}</Text>
-            <Text style={styles.logText}>Calories: {item.calories}</Text>
+            <Text style={styles.logText}>{`${item.date} - ${item.mealName}`}</Text>
+            <Text style={styles.logSubText}>Calories: {item.calories}</Text>
           </View>
         )}
       />
 
-      <TouchableOpacity style={styles.button} onPress={() => setShowLogOptions(!showLogOptions)}>
-        <Text style={styles.buttonText}>Log Food</Text>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => setShowLogOptions(!showLogOptions)}
+      >
+        <Text style={styles.buttonText}>Add New Log</Text>
       </TouchableOpacity>
-
-      {showLogOptions && (
-        <View style={styles.logOptions}>
-          <TouchableOpacity style={styles.optionButton} onPress={() => { setShowNewFoodForm(true); setShowExistingFoodList(false); }}>
-            <Text style={styles.optionButtonText}>Log New Food</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.optionButton} onPress={() => { setShowExistingFoodList(true); setShowNewFoodForm(false); }}>
-            <Text style={styles.optionButtonText}>Log Existing Food</Text>
-          </TouchableOpacity>
-        </View>
-      )}
 
       {showNewFoodForm && (
         <View style={styles.formContainer}>
-          <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.datePicker}>
-            <Text style={styles.dateText}>{date.toLocaleDateString()} {date.toLocaleTimeString()}</Text>
+          <TouchableOpacity
+            onPress={() => setShowDatePicker(true)}
+            style={styles.datePicker}
+          >
+            <Text style={styles.dateText}>
+              {`${date.toLocaleDateString()} ${date.toLocaleTimeString()}`}
+            </Text>
           </TouchableOpacity>
           {showDatePicker && (
             <DateTimePicker
@@ -151,168 +131,26 @@ function LogFoodScreen({ navigation }) {
             />
           )}
 
-          <TextInput
-            style={styles.input}
-            placeholder="Meal Name *"
-            value={mealName}
-            onChangeText={setMealName}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Food Items *"
-            value={foodItems}
-            onChangeText={setFoodItems}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Portion Size *"
-            value={portionSize}
-            onChangeText={setPortionSize}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Calories *"
-            value={calories}
-            onChangeText={setCalories}
-            keyboardType="numeric"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Carbs *"
-            value={carbs}
-            onChangeText={setCarbs}
-            keyboardType="numeric"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Proteins *"
-            value={proteins}
-            onChangeText={setProteins}
-            keyboardType="numeric"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Fats *"
-            value={fats}
-            onChangeText={setFats}
-            keyboardType="numeric"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Preparation Method"
-            value={preparationMethod}
-            onChangeText={setPreparationMethod}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Ingredients"
-            value={ingredients}
-            onChangeText={setIngredients}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Meal Location"
-            value={mealLocation}
-            onChangeText={setMealLocation}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Notes"
-            value={notes}
-            onChangeText={setNotes}
-          />
-
-          <TouchableOpacity style={styles.button} onPress={logNewFood}>
-            <Text style={styles.buttonText}>Log Meal</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-
-      {showExistingFoodList && (
-        <FlatList
-          data={existingFoods}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => (
-            <TouchableOpacity style={styles.logItem} onPress={() => logExistingFood(item)}>
-              <Text style={styles.logText}>{item.mealName}</Text>
-              <Text style={styles.logText}>Calories: {item.calories}</Text>
-            </TouchableOpacity>
+          {/* Form Inputs */}
+          {['Meal Name', 'Food Items', 'Portion Size', 'Calories'].map(
+            (placeholder, idx) => (
+              <TextInput
+                key={idx}
+                style={styles.input}
+                placeholder={`${placeholder} *`}
+                onChangeText={(val) => {
+                  switch (idx) {
+                    case 0:
+                      return setMealName(val);
+                  }
+                }}
+              />
+            )
           )}
-        />
+        </View>
       )}
     </ScrollView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    backgroundColor: '#fff',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  logItem: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10,
-  },
-  logText: {
-    fontSize: 16,
-  },
-  button: {
-    backgroundColor: '#007BFF',
-    padding: 15,
-    borderRadius: 5,
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  logOptions: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 20,
-  },
-  optionButton: {
-    backgroundColor: '#007BFF',
-    padding: 10,
-    borderRadius: 5,
-  },
-  optionButtonText: {
-    color: '#fff',
-    fontSize: 16,
-  },
-  formContainer: {
-    marginBottom: 20,
-  },
-  datePicker: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10,
-    alignItems: 'center',
-  },
-  dateText: {
-    fontSize: 16,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 10,
-    fontSize: 16,
-    marginBottom: 10,
-  },
-});
-
-export default LogFoodScreen;
+const Styles =Override
